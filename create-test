@@ -1,0 +1,6 @@
+#! /bin/bash
+
+DIR_NAME=${1?Provide directory name as 1st argument}
+
+mkdir -p ~/dev/_t/${DIR_NAME}
+code ~/dev/_t/${DIR_NAME}

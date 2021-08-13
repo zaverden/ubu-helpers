@@ -1,0 +1,15 @@
+#!/bin/bash
+
+: ${TOKEN:?}
+CONTAINER_NAME=$1
+PORT=$2
+
+CONTAINER_ID=$(docker ps -aqf "name=${CONTAINER_NAME}")
+
+docker run \
+  --rm \
+  --network container:${CONTAINER_ID} \
+  inlets/inlets:2.7.3 \
+  client --token ${TOKEN} \
+  --remote "wss://t.zaverden.com" \
+  --upstream "${CONTAINER_NAME}.t.zaverden.com=http://${CONTAINER_ID}:${PORT}"

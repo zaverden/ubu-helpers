@@ -1,0 +1,12 @@
+#!/bin/bash
+
+: ${TOKEN:?}
+NAME=$1
+PORT=$2
+
+docker run \
+  --rm \
+  inlets/inlets:2.7.3 \
+  client --token ${TOKEN} \
+  --remote "wss://t.zaverden.com" \
+  --upstream "${NAME}.t.zaverden.com=http://172.17.0.1:${PORT}"

@@ -1,0 +1,23 @@
+#!/usr/bin/env node
+
+const { spawnSync } = require("child_process");
+const { existsSync } = require("fs");
+const { resolve: resolvePath } = require("path");
+
+// git@github.com:zaverden/esbuild-plugin-postcss.git
+const { HOME } = process.env;
+const [, , url] = process.argv;
+const base = resolvePath(HOME, "dev");
+
+const [, service, ...path] = url.replace(/\.git$/, "").split(/\@|\:|\//);
+
+const repoPath = resolvePath(base, service, ...path);
+if (!existsSync(repoPath)) {
+  console.log(`Clonning ${url}`);
+  spawnSync("git", ["repo", url], {
+    stdio: "inherit",
+  });
+}
+spawnSync("code", [repoPath], {
+  stdio: "inherit",
+});

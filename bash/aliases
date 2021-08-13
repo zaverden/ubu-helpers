@@ -1,0 +1,13 @@
+function setAlias() {
+  local N=${1}
+  local C=${2}
+  alias $N="${C}"
+  complete -F _complete_alias $N
+}
+
+setAlias ll 'ls -alF'
+setAlias dc 'docker'
+setAlias dcc 'docker-compose'
+
+alias ssdocker='sudo service docker start'
+
