@@ -1,0 +1,10 @@
+#! /bin/bash
+# usage
+# killport <port-number>
+# killport 3000
+
+PORT_TO_KILL=${1?Provide port as 1st argument}
+
+PID=$(lsof -t -i tcp:$PORT_TO_KILL)
+
+[ -z "$PID" ] && echo "nothing on :${PORT_TO_KILL}" || kill -9 ${PID}
