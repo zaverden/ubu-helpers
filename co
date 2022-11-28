@@ -1,23 +1,31 @@
 #!/usr/bin/env node
-
+// @ts-check
 const { spawnSync } = require("child_process");
-const { existsSync } = require("fs");
+const { existsSync, mkdirSync } = require("fs");
 const { resolve: resolvePath } = require("path");
 
-// git@github.com:zaverden/esbuild-plugin-postcss.git
 const { HOME } = process.env;
 const [, , url] = process.argv;
 const base = resolvePath(HOME, "dev");
 
+// git@github.com:zaverden/esbuild-plugin-postcss.git
 const [, service, ...path] = url.replace(/\.git$/, "").split(/\@|\:|\//);
 
 const repoPath = resolvePath(base, service, ...path);
 if (!existsSync(repoPath)) {
-  console.log(`Clonning ${url}`);
-  spawnSync("git", ["repo", url], {
+  mkdirSync(repoPath, { recursive: true });
+  console.log(`repo folder is created: ${repoPath}`);
+  spawnSync("git", ["clone", url, repoPath], {
     stdio: "inherit",
   });
+} else {
+  console.log(`Fetching ${url}`);
+  spawnSync("git", ["fetch", "--all", "--force", "--prune", "--prune-tags"], {
+    stdio: "inherit",
+    cwd: repoPath,
+  });
 }
+
 spawnSync("code", [repoPath], {
   stdio: "inherit",
 });
